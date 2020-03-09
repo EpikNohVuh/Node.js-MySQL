@@ -5,8 +5,8 @@ const Table = require('cli-table');
 var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
-  user: "",
-  password: "!",
+  user: "Sharon",
+  password: "pelouzeK5!",
   database: "BAMAZON_DB"
 });
 
@@ -56,13 +56,15 @@ function displayProducts() {
 
           if (res[0].STOCK >= answer.quantity) {
             var subTotal = answer.quantity * res[0].PRICE;
-            console.log(res[0].STOCK);
+            //console.log(res[0].STOCK);
+            console.log("  ");
             console.log("* * * * * B A M A Z O N   R E C E I P T * * * * *");
             console.log("You purchased " + answer.quantity + " " + res[0].PRODUCT_NAME + " @ " + res[0].PRICE + " each ");
             console.log("Your total is: " + subTotal)
             console.log("* * * * T H A N K  Y O U,  C O M E  A G A I N  * * * ")
+            console.log("  ");
             var updatedStock = res[0].STOCK - quantity;
-            console.log(updatedStock);
+            //console.log(updatedStock);
             var query = connection.query(
               "UPDATE products SET ? WHERE ?",
               [
@@ -74,10 +76,10 @@ function displayProducts() {
                 }
               ]);
 
-
+            tryAgain();
           } else {
             console.log("Insufficient Quantity. Please adjust your order, we only have " + res[0].STOCK + " of " + res[0].PRODUCT_NAME + ".");
-            tryAgain()
+            tryAgain();
           };
         }
         )
@@ -86,23 +88,29 @@ function displayProducts() {
 };
 
 function tryAgain() {
-  
-  inquirer.prompt([
-    {
-      name: 'tryAgain',
-      type: 'input',
-      message: "Would you like to make another purchase?"
-    }
-  ]).then(function(answer){
-    if (err) throw err;
-var tryAgain = answer.tryAgain;
-if(tryAgain==="Y"){
-  displayProducts()
-} else {
-  console.log("Thank you for shopping Bamazon!");
-  connection.end();
-}
 
-  })
+  inquirer.prompt(
+    [
+      {
+        name: 'tryAgain',
+        type: 'input',
+        message: "Would you like to make another purchase? 'Y' for YES."
+      }
+    ]).then(function(answer) {
 
-}
+      var tryAgain = answer.tryAgain.toUpperCase();
+      
+      if (tryAgain === "Y"){
+        displayProducts();
+      }else{
+        
+        console.log("  ");
+        console.log("Thank you for shopping Bamazon!");
+        console.log("  ");
+        connection.end();
+
+      };
+      
+    });
+
+};
