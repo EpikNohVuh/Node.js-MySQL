@@ -74,29 +74,35 @@ function displayProducts() {
                 }
               ]);
 
-            
+
           } else {
             console.log("Insufficient Quantity. Please adjust your order, we only have " + res[0].STOCK + " of " + res[0].PRODUCT_NAME + ".");
-
-
-
+            tryAgain()
           };
-
         }
-
-
-
-
-
-
         )
-
-
       })
-
-
-
   });
-
-
 };
+
+function tryAgain() {
+  
+  inquirer.prompt([
+    {
+      name: 'tryAgain',
+      type: 'input',
+      message: "Would you like to make another purchase?"
+    }
+  ]).then(function(answer){
+    if (err) throw err;
+var tryAgain = answer.tryAgain;
+if(tryAgain==="Y"){
+  displayProducts()
+} else {
+  console.log("Thank you for shopping Bamazon!");
+  connection.end();
+}
+
+  })
+
+}
